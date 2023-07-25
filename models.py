@@ -1,3 +1,31 @@
+import json
+
+def guardar_Evento(evento, archivo):
+    with open(archivo, 'w') as file:
+        json.dump(evento.__dict__, file, indent=4)
+
+def cargar_eventos(archivo):
+    try:
+        with open(archivo, 'r') as file:
+            eventos = json.load(file)
+            eventos_obj = [Evento(**evento) for evento in eventos]
+            return eventos_obj
+    except FileNotFoundError:
+        return []
+
+def guardar_Ubicacion(ubicacion, archivo):
+    with open(archivo, 'w') as file:
+        json.dump(ubicacion.__dict__, file, indent=4)
+
+def cargar_ubicaciones(archivo):
+    try:
+        with open(archivo, 'r') as file:
+            ubicaciones = json.load(file)
+            ubicaciones_obj = [Ubicacion(**ubicacion) for ubicacion in ubicaciones]
+            return ubicaciones_obj
+    except FileNotFoundError:
+        return []
+
 class Evento:
     def __init__(self, id, nombre, artista, genero, id_ubicacion, hora_inicio, hora_fin, descripcion, imagen):
         self.id = id
@@ -10,34 +38,12 @@ class Evento:
         self.descripcion = descripcion
         self.imagen = imagen
 
-class Ruta_visita:
-    def __init__(self, id, nombre, destinos):
-        self.id = id
-        self.nombre = nombre
-        self.destinos = destinos
-
 class Ubicacion:
     def __init__(self, id, nombre, direccion, coordenadas):
         self.id = id
         self.nombre = nombre
         self.direccion = direccion
         self.coordenadas = coordenadas
-
-class Usuario:
-    def __init__(self, id, nombre, apellido, historial_eventos):
-        self.id = id
-        self.nombre = nombre
-        self.apellido = apellido
-        self.historial_eventos = historial_eventos
-
-class Review:
-    def __init__(self, id, id_evento, id_usuario, calificacion, comentario, animo):
-        self.id = id
-        self.id_evento = id_evento
-        self.id_usuario = id_usuario
-        self.calificacion = calificacion
-        self.comentario = comentario
-        self.animo = animo
 
 #Crear Eventos
 # Crear un evento para Alan Sutton y las criaturitas de la ansiedad
@@ -110,37 +116,18 @@ ubicacion3 = Ubicacion(
     id = 3,
     nombre = "La Troja",
     direccion = "Paraje La Troja, Salta",
-    coordenadas = ( -24.7859, -65.41166)
-)
+    coordenadas = (-24.7859, -65.41166))
 
-# Crear una ruta de visita con los tres conciertos
-ruta1 = Ruta_visita(
-    id = 1,
-    nombre = "Ruta rockera",
-    destinos = [evento2, evento3, evento4]
-)
+eventos = [evento1, evento2, evento3, evento4]
+ubicaciones = [ubicacion1, ubicacion2, ubicacion3]
 
-# Crear una ruta de visita con los eventos folclóricos
-ruta2 = Ruta_visita(
-    id = 2,
-    nombre = "Ruta folklórica",
-    destinos = [evento4]
-)
+#Guardar eventos en el archivo "eventos_json"
+with open("eventos.json", "w") as file:
+    eventos_json = [evento.__dict__ for evento in eventos]
+    json.dump(eventos_json, file, indent=4)
 
-# Crear un usuario con los datos de ejemplo
-usuario1 = Usuario(
-    id = 1,
-    nombre = "Juan",
-    apellido = "Pérez",
-    historial_eventos = [evento2, evento4]
-)
+# Guardar ubicaciones en el archivo "ubicaciones.json"
+with open("ubicaciones.json", "w") as file:
+    ubicaciones_json = [ubicacion.__dict__ for ubicacion in ubicaciones]
+    json.dump(ubicaciones_json, file, indent=4)
 
-# Crear una review con los datos de ejemplo
-review1 = Review(
-    id = 1,
-    id_evento = 1,
-    id_usuario = 1,
-    calificacion = 5,
-    comentario = "Me encantó el concierto de Alan Sutton y las criaturitas de la ansiedad. Fue una noche increíble, con buena música y buen ambiente. La banda sonó genial y el público se prendió con cada tema. Recomiendo este evento a todos los que les gusta el rock alternativo.",
-    animo = "Feliz"
-)
